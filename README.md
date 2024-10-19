@@ -1,20 +1,22 @@
-#Selenium Automation Framework with LambdaTest Integration
-Overview
+**#Selenium Automation Framework with LambdaTest Integration**
+**Overview**
 This automation framework is designed to enable the testing of web applications using Selenium WebDriver, integrated with LambdaTest's cloud-based platform for cross-browser testing. It utilizes TestNG for test management and Extent Reports for detailed test reporting, including screenshots for each test step.
 
-Features:
+**Features:**
 Cross-browser and cross-platform testing on the cloud (LambdaTest).
 Screenshot attachment for individual steps in the report.
 Integration with Extent Reports for test result visualization.
 TestNG framework support for running tests in parallel.
 WebDriver factory for dynamic browser instantiation.
 LambdaTest integration for remote testing.
-Prerequisites:
+
+**Prerequisites:**
 Java Development Kit (JDK): Ensure you have JDK installed. You can download it from the Oracle website.
 Eclipse IDE/IntelliJ IDEA: Use either IDE to run the Java code.
 Maven/Gradle: For dependency management 
 
-Framework Dependencies :
+**Framework Dependencies :**
+
 Key Dependencies:
 Selenium:
 selenium-java: Provides the main Selenium bindings for Java.
