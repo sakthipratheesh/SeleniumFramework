@@ -143,7 +143,7 @@ public class RestAssuredUtils {
     public static Response deleteWithBasicAuth(String endpoint, String username, String password) {
         return RestAssured.given()
                           .auth()
-                          .preemptive()
+                         
                           .basic(username, password)
                           .when()
                           .delete(endpoint)

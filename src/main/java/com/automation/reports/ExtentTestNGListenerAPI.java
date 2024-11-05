@@ -11,6 +11,8 @@ import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+import org.testng.Reporter;
+
 import com.automation.base.BaseTest;
 import com.automation.utils.ScreenshotUtils;
 import com.aventstack.extentreports.ExtentReports;
@@ -27,19 +29,26 @@ public class ExtentTestNGListenerAPI implements ITestListener {
 
     @Override
     public void onStart(ITestContext context) {
+    	
         ExtentSparkReporter spark = new ExtentSparkReporter("ExtentReportTestNG.html");
         extent = new ExtentReports();
         extent.setSystemInfo("Host Name", "Sakthi");
         extent.setSystemInfo("Environment", "QA");
         extent.setSystemInfo("User Name", "Sakthipratheesh");
         extent.attachReporter(spark);
+        Reporter.log("Host Name, Sakthi");
+        Reporter.log("Environment , QA");
+        Reporter.log("User name :  Sakthipratheesh");
 
         log.info("Extent Reports initialized for the test suite: " + context.getName());
+        Reporter.log("Extent Reports initialized for the test suite: " + context.getName());
+        
     }
 
     @Override
     public void onTestStart(ITestResult result) {
     	ExtentTest  test = extent.createTest(result.getMethod().getMethodName());
+    	Reporter.log("Test started: " +result.getMethod().getMethodName());
         log.info("Test started: " + result.getMethod().getMethodName());
         testLog.set(test);  // Set test in ThreadLocal
         testLog.get().info("Test started: " + result.getMethod().getMethodName());
@@ -50,6 +59,8 @@ public class ExtentTestNGListenerAPI implements ITestListener {
     public void onTestSuccess(ITestResult result) {
         testLog.get().pass("Test Passed: " + result.getMethod().getMethodName());
         log.info("Test Passed: " + result.getMethod().getMethodName());
+        Reporter.log("Test Passed: " + result.getMethod().getMethodName());
+        
     }
 
     @Override
@@ -57,21 +68,41 @@ public class ExtentTestNGListenerAPI implements ITestListener {
         testLog.get().fail("Test Failed: " + result.getMethod().getMethodName());
         testLog.get().fail(result.getThrowable());
         log.error("Test Failed: " + result.getMethod().getMethodName(), result.getThrowable());
+        Reporter.log("Test Failed: " + result.getMethod().getMethodName() +"  "+result.getThrowable());
+        
     }
 
     @Override
     public void onTestSkipped(ITestResult result) {
         testLog.get().skip("Test Skipped: " + result.getMethod().getMethodName());
         log.warn("Test Skipped: " + result.getMethod().getMethodName());
+        Reporter.log("Test Skipped: " + result.getMethod().getMethodName());
     }
 
     @Override
     public void onFinish(ITestContext context) {
         extent.flush();
         log.info("All tests completed for the test suite: " + context.getName());
+        Reporter.log("All tests completed for the test suite: " + context.getName());
+    }
+
+    public void captureScreenshot(ITestResult result) throws IOException {
+        Object testClass = result.getInstance();
+        WebDriver driver = ((BaseTest) testClass).getDriver();
+
+        File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        String screenshotPath = System.getProperty("user.dir") + "/screenshots/" + result.getMethod().getMethodName() + ".png";
+        File dest = new File(screenshotPath);
+        FileUtils.copyFile(src, dest);
+
+        testLog.get().addScreenCaptureFromPath(screenshotPath);
+        log.info("Screenshot captured for test: " + result.getMethod().getMethodName());
+        Reporter.log("Screenshot captured for test: " + result.getMethod().getMethodName());
     }
     
     public void logInfo(String stepDescription) {
 	    testLog.get().info(stepDescription);
+	    Reporter.log(stepDescription);
 	}
+
 }
